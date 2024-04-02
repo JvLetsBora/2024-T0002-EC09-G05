@@ -5,13 +5,13 @@
         <a href="/" class="flex flex-shrink-0 items-center">
           <img
             class="h-8 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+            src="../assets/logo.png"
             alt="Your Company"
           />
         </a>
         <div class="flex items-center w-full sm:hidden">
           <!-- Mobile menu button-->
-          <SearchBar class="w-50 ml-11" />
+          <SearchBar class="w-50 ml-11 transition-all" />
         </div>
 
         <div
