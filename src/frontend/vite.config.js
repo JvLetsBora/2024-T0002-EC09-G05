@@ -14,5 +14,32 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  optimizeDeps: {
+    include: ['cypress'], 
+  },
+  
+  preview:{
+    host: true,
+    port: 3000
+  },
+  server:{
+    host: true,
+    port: 8084,
+    watch: {
+      usePolling: true
+    },
+    hmr: {
+      protocol: 'ws',
+      host: '0.0.0.0',
+    },
+    
+    proxy:{
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    }
   }
 })

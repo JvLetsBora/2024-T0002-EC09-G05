@@ -24,6 +24,7 @@
                     name="email"
                     type="email"
                     autocomplete="email"
+                    v-model="email"
                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
@@ -45,6 +46,7 @@
                     id="password"
                     name="password"
                     type="password"
+                    v-model="password"
                     autocomplete="current-password"
                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
@@ -74,20 +76,44 @@
   </div>
 </template>
 <script>
+
+import axios from 'axios';
+import { useCookies } from 'vue3-cookies'
+
 export default {
   data() {
     return {
-      username: 'Username',
-      password: 'blabla'
+      email: '',
+      password: ''
     }
   },
   methods: {
-    login() {
-      this.$toast.success(`Login successful! Welcome, ${this.username}`)
+    async login() {
+      try {
+        const url = '/api/auth/login';
+        
 
-      window.user = this.username
-      this.$router.push('/default')
+        const response = await axios.post( url,  {
+          email: String(this.email),
+          password: this.password
+        });
+
+        
+        useCookies().cookies.set('authToken', response.data.id)
+        if (!response.data) {
+          throw new Error('Erro ao fazer requisição para o servidor.');
+        }
+
+        this.$toast.success(`Login successful! Welcome, ${response.data.name}`);
+        window.user = response.data.id;
+        this.$router.push('/');
+      } catch (error) {
+        this.$toast.error(`Usuário ou senha estão incorretos.`);
+        console.error('Ocorreu um erro:', error);
+        // Aqui você pode exibir uma mensagem de erro para o usuário, informando que houve um problema durante a autenticação
+      }
     }
   }
 }
 </script>
+
